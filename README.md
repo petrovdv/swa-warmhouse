@@ -8,7 +8,7 @@
 
 Чтобы составить документ с описанием текущей архитектуры приложения, можно часть информации взять из описания компании и условия задания. Это нормально.
 
-</aside
+</aside>
 
 ### 1. Описание функциональности монолитного приложения
 
@@ -32,6 +32,18 @@
 
 Опишите здесь домены, которые вы выделили.
 
+```plantuml
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(personAlias, "Label", "Optional Description")
+Container(containerAlias, "Label", "Technology", "Optional Description")
+System(systemAlias, "Label", "Optional Description")
+
+Rel(personAlias, containerAlias, "Label", "Optional Technology")
+@enduml
+```
+
 ### **4. Проблемы монолитного решения**
 
 - …
@@ -40,7 +52,7 @@
 
 Если вы считаете, что текущее решение не вызывает проблем, аргументируйте свою позицию.
 
-### 5. Визуализация контекста системы — диаграмма С4
+### 5. Визуализация контекста системы — диаграмма С4
 
 Добавьте сюда диаграмму контекста в модели C4.
 
