@@ -32,7 +32,7 @@
 
 Опишите здесь домены, которые вы выделили.
 
-![Alt text for the image](https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80 "Optional title text")
+![Alt text for the image](https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80 "Optional text")
 
 
 ### **4. Проблемы монолитного решения**
