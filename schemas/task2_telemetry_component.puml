@@ -1,0 +1,29 @@
+@startuml
+title Сбор телеметрии
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Container(webapp, "Web Application", "javascript and angular", "Web-портал, предоставляющий всю информацию по умному дому")
+Container(mobapp, "Mobile App", "Xamarin", "Мобильное приложение по управлению умным домом")
+Container(gateway, "API Gateway", "Маршрутизатор", "Маршрутизирует запросы к сервисам")
+ContainerDb(db, "Database", "Relational Database Schema", "Хранит телеметрию")
+System_Ext(telemetry_sensor, "Датчик сбора телеметрии", "Датчики сбора телеметрии")
+
+Container_Boundary(api, "Telemetry API") {
+    Component(analytics, "Telemetry analytics", "Rest Controller", "Возвращает аналитику по собранной телеметрии")
+    Component(collector, "Telemetry collector", "Rest Controller", "Собирает телеметрию с устройств")
+
+    Rel(analytics, db, "Read & write to", "Database")
+    Rel(collector, db, "Read & write to", "Database")
+    Rel(collector, telemetry_sensor, "JSON/HTTPS", "Pull запросы")
+}
+
+Rel(webapp, gateway, "Uses", "JSON/HTTPS")
+Rel(mobapp, gateway, "Uses", "JSON/HTTPS")
+Rel(gateway, analytics, "Uses", "JSON/HTTPS")
+Rel(gateway, collector, "Uses", "JSON/HTTPS")
+
+@enduml

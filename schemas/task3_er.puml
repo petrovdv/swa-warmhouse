@@ -1,0 +1,55 @@
+@startuml
+
+entity "User" {
+  * id : NUMBER
+  --
+  name : VARCHAR
+  email : VARCHAR
+  password : VARCHAR
+  last_updated : DATE
+  created_at : DATE
+}
+
+entity "House" {
+  * id : NUMBER
+  --
+  name : VARCHAR
+  user_id : NUMBER
+  owner : NUMBER
+  last_updated : DATE
+  created_at : DATE
+}
+
+entity "DeviceType" {
+  * id : NUMBER
+  --
+  name : VARCHAR
+}
+
+entity "Device" {
+  * id : NUMBER
+  --
+  name : VARCHAR
+  type_id : NUMBER
+  house_id : NUMBER
+  serial_number : VARCHAR
+  location: VARCHAR
+  status: VARCHAR
+  last_updated : DATE
+  created_at : DATE
+  house_id : NUMBER
+}
+
+entity "TelemetryData" {
+  * id : NUMBER
+  --
+  device_id: NUMBER
+  value : DECIMAL
+}
+
+User ||--o{ House
+House ||--o{ Device
+Device ||--o{ TelemetryData
+Device ||--|| DeviceType
+
+@enduml

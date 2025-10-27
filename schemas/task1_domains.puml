@@ -1,0 +1,12 @@
+@startuml
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Boundary(c1, "SmartHome: управление отоплением", $type="domain") {
+    Component(SensorsSystem, "Context: управление датчиками отопления", "Управлением датчиками отопления")
+    Component(TemperatureSystem, "Context: мониторинг температуры", "Мониторинг температуры")
+}
+
+@enduml

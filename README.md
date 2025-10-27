@@ -1,6 +1,6 @@
 # Спринт 1
 
-Решение проектной работы.
+Решение проектной работы по кейсу "Умный дом".
 
 # Задание 1. Анализ и планирование
 
@@ -14,6 +14,7 @@
 **Мониторинг температуры:**
 
 - Пользователи могут проверять температуру в доме.
+- Пользователи могут выставить целевое значение температуры, но не могут его посмотреть. Текущий АПИ всегда выдаёт только текущую температуру в помещении.
 
 ### 2. Анализ архитектуры монолитного приложения
 
@@ -21,35 +22,19 @@
 
 ### 3. Определение доменов и границы контекстов
 
-Опишите здесь домены, которые вы выделили.
+Домен - управление умным домом. Текущее приложение реализует только часть функционала - управление отоплением. Можно выделить два контекста - мониторинг температуры и управление датчиками отопления.
 
-[![Alt text for the image](https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80 "Optional text")](https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80)
-
-[![Sprites/Icons - open link](https://www.plantuml.com/plantuml/svg/hP9BZzem4CVl-HHUr0ChBPj3sqkbIek0Tf5uK1v5FQ59F05NZfrw9l3rEmvXD-f3wg4dE_EV-VyyCtaYXi1rQPCxut9RQrGdvee-f6c0o-FHyAdEQiAGUyVe-37tPLfPSB5cGAojoTBHky4gXdRpMLe2CGO97KPI0SPXUAoYVtAdiP1FDPvydOwMYyq_WBYkG8Uthq0Zwg2GZ05LmJ3IZQVn73LweNnQBhR3_MIpd4_-AwY9mGN9bpXu_pgrMrSfk6DjeMtwT_axdE5lMaa_x84mdF7NyautQNmxjJET3RyjTzl3VhfzFimcdoUBSVy-ILQIu5q_9ZwetgWczYM6djnNw2kBYa_0oY5gLGMlwvn9n3VNJZ_s6a3lFdbPO9ygaEBDQXWzsWRZTNj2LKgACeun592trYpnlCLUDH26kiZikw2RKnS5bH7ZuMeQ_UEmulaCJbia1TOgsPqa4YdhZoRlsiNihjSuw-jCgiV0a05XT9gRF7Zo1QlDbrbZxQscsnWUb0yQWnASFFliJOvo5ZwKmCQxBgopAs4cQxJjlA-psX5Ij6z-FKc8UgD8Vt-M3-jhxysJrmYQqdr4HVa9dPPz_mG0 "Sprites/Icons")](https://www.plantuml.com/plantuml/uml/hP9BZzem4CVl-HHUr0ChBPj3sqkbIek0Tf5uK1v5FQ59F05NZfrw9l3rEmvXD-f3wg4dE_EV-VyyCtaYXi1rQPCxut9RQrGdvee-f6c0o-FHyAdEQiAGUyVe-37tPLfPSB5cGAojoTBHky4gXdRpMLe2CGO97KPI0SPXUAoYVtAdiP1FDPvydOwMYyq_WBYkG8Uthq0Zwg2GZ05LmJ3IZQVn73LweNnQBhR3_MIpd4_-AwY9mGN9bpXu_pgrMrSfk6DjeMtwT_axdE5lMaa_x84mdF7NyautQNmxjJET3RyjTzl3VhfzFimcdoUBSVy-ILQIu5q_9ZwetgWczYM6djnNw2kBYa_0oY5gLGMlwvn9n3VNJZ_s6a3lFdbPO9ygaEBDQXWzsWRZTNj2LKgACeun592trYpnlCLUDH26kiZikw2RKnS5bH7ZuMeQ_UEmulaCJbia1TOgsPqa4YdhZoRlsiNihjSuw-jCgiV0a05XT9gRF7Zo1QlDbrbZxQscsnWUb0yQWnASFFliJOvo5ZwKmCQxBgopAs4cQxJjlA-psX5Ij6z-FKc8UgD8Vt-M3-jhxysJrmYQqdr4HVa9dPPz_mG0)
+![Домены](./schemas/task1_domains.png)
 
 ### **4. Проблемы монолитного решения**
 
-- Самостоятельно подключить свой датчик к системе пользователь не может. Каждая установка сопровождается выездом специалиста по подключению системы отопления в доме к текущей версии системы.
-- Нынешнее приложение компании позволяет только управлять отоплением в доме и проверять температуру.
-- …
-
-Если вы считаете, что текущее решение не вызывает проблем, аргументируйте свою позицию.
+- Текущая схема не даёт пользователю добавлять и настраивать датчики самостоятельно. Для этого нужно обращаться к обсуживающему персоналу.
+- Приложение не покрывает все потребности бизнеса. Есть необходимость расширять функционал приложения - добавлять датчики новых типов.
+- Трудности масштабирования приложения при росте числа пользователей.
 
 ### 5. Визуализация контекста системы — диаграмма С4
 
-Добавьте сюда диаграмму контекста в модели C4.
-
-Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
-
-```markdown
-[Текст ссылки](URL)
-```
-
-Замените `Текст ссылки` текстом, который хотите использовать для ссылки. Вместо `URL` вставьте адрес, на который должна вести ссылка. Например:
-
-```markdown
-[Посетите Яндекс](https://ya.ru/)
-```
+![Диаграмма контекстов](./schemas/task1_context.png)
 
 # Задание 2. Проектирование микросервисной архитектуры
 
@@ -57,29 +42,31 @@
 
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+![Диаграмма контекстов](./schemas/task2_container.png)
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+![Диаграмма компонентов Users API](./schemas/task2_users_component.png)
 
-**Диаграмма кода (Code)**
+![Диаграмма компонентов Devices API](./schemas/task2_devices_component.png)
 
-Добавьте одну диаграмму или несколько.
+![Диаграмма компонентов Telemetry API](./schemas/task2_telemetry_component.png)
 
 # Задание 3. Разработка ER-диаграммы
 
 Добавьте сюда ER-диаграмму. Она должна отражать ключевые сущности системы, их атрибуты и тип связей между ними.
 
+![ER Диаграмма](./schemas/task3_er.png)
+
 # Задание 4. Создание и документирование API
 
 ### 1. Тип API
 
-Укажите, какой тип API вы будете использовать для взаимодействия микросервисов. Объясните своё решение.
+В первой итерации будем использовать взаимодействие по протоколу HTTPS/JSON с использованием REST API. Выбран как наиболее простой способ для быстрой реализации. В дальнейшем можно рассмотреть другие механизмы. Проблемное место - сбор телеметрии. Возможно, стоит проработать асинхронное взаимодействие для этой области в дальнейшем.  
 
 ### 2. Документация API
 
-Здесь приложите ссылки на документацию API для микросервисов, которые вы спроектировали в первой части проектной работы. Для документирования используйте Swagger/OpenAPI или AsyncAPI.
+- **[Документация для сервиса Телеметрии](./apps/telemetry_api/openapi.yaml)**
 
 # Задание 5. Работа с docker и docker-compose
 
@@ -136,6 +123,7 @@ Locations - название комнаты, sensorId - идентификато
 
 Ревьюер будет проверять точно так же.
 
+Указанный сервис на языке Go уже был добавлен в шаблон задания на сайте Практикума. Была необходимость только прописать настройки в docker-compose, запустить и проверить сервис.
 
 # **Задание 6. Разработка MVP**
 

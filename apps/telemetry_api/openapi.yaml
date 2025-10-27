@@ -1,0 +1,154 @@
+openapi: 3.0.3
+info:
+  title: Telemetry Data API
+  version: 1.0.0
+  description: Managing telemetry data from devices.
+
+servers:
+  - url: http://localhost:8084
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: A healthcheck for service
+      responses:
+        '200':
+          description: A simple status message
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /telemetry:
+    get:
+      summary: Get all telemetry records
+      tags: [Telemetry]
+      responses:
+        '200':
+          description: A list of telemetry records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryData'
+
+    post:
+      summary: Create a new telemetry record
+      tags: [Telemetry]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryDataInput'
+      responses:
+        '201':
+          description: Telemetry record created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryData'
+
+  /telemetry/{id}:
+    get:
+      summary: Get telemetry record by ID
+      tags: [Telemetry]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A telemetry record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryData'
+        '404':
+          description: Telemetry record not found
+
+  /telemetry/device/{device_id}:
+    get:
+      summary: Get all telemetry data for a specific device
+      tags: [Telemetry]
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of telemetry records for the device
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryData'
+        '404':
+          description: No telemetry found for this device
+
+  /telemetry/device/{device_id}/latest:
+    get:
+      summary: Fetch most recent telemetry for device and save it to database
+      tags: [Telemetry]
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A telemetry record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryData'
+
+components:
+  schemas:
+    TelemetryData:
+      type: object
+      properties:
+        id:
+          type: integer
+        device_id:
+          type: integer
+        value:
+          type: number
+          format: float
+        unit:
+          type: string
+        location:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    TelemetryDataInput:
+      type: object
+      required:
+        - device_id
+        - value
+        - unit
+        - location
+        - status
+      properties:
+        device_id:
+          type: integer
+        value:
+          type: number
+        unit:
+          type: string
+        location:
+          type: string
+        status:
+          type: string

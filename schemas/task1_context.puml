@@ -1,0 +1,20 @@
+@startuml
+title Smarthome Context Diagram
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь сервисов компании SmartHome")
+Person(admin, "Сотрудник SmartHome", "Сотрудник компании SmartHome, отвечающий за обслуживание системы")
+System(system, "SmartHome System", "Система удаленного управления отоплением")
+System_Ext(sensor, "Sensor", "Датчик управления отоплением")
+
+Rel(user, system, "Устанавливает желаемую температуру в помещении через приложение")
+Rel(user, system, "Включает/выключает отопление в помещении")
+Rel(user, system, "Проверяет температуру в помещении")
+Rel(admin, system, "Управляет добавлением и удалением датчиков в систему")
+Rel(system, sensor, "Включает/выключает отопление, собирает данные о температуре")
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+title Управление пользователями
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Container(webapp, "Web Application", "javascript and angular", "Web-портал, предоставляющий всю информацию по умному дому")
+Container(mobapp, "Mobile App", "Xamarin", "Мобильное приложение по управлению умным домом")
+Container(gateway, "API Gateway", "Маршрутизатор", "Маршрутизирует запросы к сервисам")
+ContainerDb(db, "Database", "Relational Database Schema", "Хранит информацию о пользователях, хэши паролей и лог доступа")
+
+Container_Boundary(api, "Users API") {
+    Component(sign, "Sign In Controller", "Rest Controller", "Контролер аутентификации пользователей")
+    Component(accounts, "Users CRUD", "Rest Controller", "Создание и управление учетными записями пользователей")
+
+    Rel(sign, db, "Read & write to", "Database")
+    Rel(accounts, db, "Read & write to", "Database")
+}
+
+Rel(webapp, gateway, "Uses", "JSON/HTTPS")
+Rel(mobapp, gateway, "Uses", "JSON/HTTPS")
+Rel(gateway, sign, "Uses", "JSON/HTTPS")
+Rel(gateway, accounts, "Uses", "JSON/HTTPS")
+
+@enduml
