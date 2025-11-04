@@ -1,0 +1,39 @@
+asyncapi: 3.0.0
+info:
+  title: Telemetry Service
+  version: 1.0.0
+  description: This service is in charge of collecting sensors telemetry
+channels:
+  telemetry-updates:
+    address: telemetry-updates
+    messages:
+      publishTelemetryData.message:
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            id:
+              type: integer
+            device_id:
+              type: integer
+            value:
+              type: number
+              format: float
+            unit:
+              type: string
+            location:
+              type: string
+            status:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+    description: Channel for publishing telemetry updates
+operations:
+  publishTelemetryData:
+    action: receive
+    channel:
+      $ref: '#/channels/telemetry-updates'
+    summary: Publish telemetry data
+    messages:
+      - $ref: '#/channels/telemetry-updates/messages/publishTelemetryData.message'

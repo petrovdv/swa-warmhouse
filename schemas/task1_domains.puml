@@ -4,9 +4,27 @@ top to bottom direction
 !define RELATIVE_INCLUDE .
 !include C4_templates/C4_Component.puml
 
-Boundary(c1, "SmartHome: управление отоплением", $type="domain") {
-    Component(SensorsSystem, "Context: управление датчиками отопления", "Управлением датчиками отопления")
-    Component(TemperatureSystem, "Context: мониторинг температуры", "Мониторинг температуры")
+Boundary(c1, "SmartHome: управление устройствами", $type="domain") {
+    Component(sensors, "Context: управление датчиками отопления", "Управлением датчиками отопления")
+    Component(monitoring, "Context: мониторинг температуры", "Мониторинг температуры")
 }
+Boundary(c2, "SmartHome: управление пользователями", $type="domain") {
+    Component(registration, "Context: регистрация пользователей", "Регистрация пользователей")
+    Component(authentication, "Context: аутентификация пользователей", "Проверка пользователей")
+}
+Boundary(c3, "SmartHome: управление сценариями", $type="domain") {
+    Component(scripts, "Context: работа с каталогом сценариев", "Создание и настройки сценариев")
+    Component(runner, "Context: контроллер сценариев", "Отвечает за расписание и запуск сценариев")
+}
+Boundary(c4, "SmartHome: биллинг", $type="domain") {
+    Component(billing, "Context: биллинг пользователей", "Контроллер расчёта стоимости пользования системой")
+    Component(invoice, "Context: выставление счетов", "Выставление счетов пользователям")
+}
+Boundary(c5, "SmartHome: поддержка пользователей", $type="domain") {
+    Component(devices, "Context: подключение новых устройств в систему", "Добавление новых устройств")
+    Component(management, "Context: управление существующими устройствами", "Контроль за состоянием существующих устройств")
+}
+
+
 
 @enduml

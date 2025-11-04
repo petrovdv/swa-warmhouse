@@ -15,10 +15,14 @@ System_Ext(telemetry_sensor, "Датчик сбора телеметрии", "Д
 Container_Boundary(api, "Telemetry API") {
     Component(analytics, "Telemetry analytics", "Rest Controller", "Возвращает аналитику по собранной телеметрии")
     Component(collector, "Telemetry collector", "Rest Controller", "Собирает телеметрию с устройств")
+    Component(broker, "Broker", "Apache Kafka", "Асинхронный АПИ для сбора телеметрии")
 
     Rel(analytics, db, "Read & write to", "Database")
     Rel(collector, db, "Read & write to", "Database")
     Rel(collector, telemetry_sensor, "JSON/HTTPS", "Pull запросы")
+    Rel(telemetry_sensor, gateway, "Async JSON", "Push запросы")
+    Rel(gateway, broker, "Async JSON", "Push запросы")
+    Rel(broker, collector, "Async JSON", "Подписка на обновления телеметрии")
 }
 
 Rel(webapp, gateway, "Uses", "JSON/HTTPS")
