@@ -1,0 +1,28 @@
+@startuml
+title Управление устройствами
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Container(webapp, "Web Application", "javascript and angular", "Web-портал, предоставляющий всю информацию по умному дому")
+Container(mobapp, "Mobile App", "Xamarin", "Мобильное приложение по управлению умным домом")
+Container(gateway, "API Gateway", "Маршрутизатор", "Маршрутизирует запросы к сервисам")
+ContainerDb(db, "Database", "Relational Database Schema", "Хранит информацию об устройствах")
+System_Ext(sensor, "Внешний датчик", "Датчик, подключенный к системе")
+
+Container_Boundary(api, "Devices API") {
+    Component(devices, "Devices CRUD", "Rest Controller", "Добавление датчиков и управление ими")
+    Component(scripts, "Scripts CRUD", "Rest Controller", "Создание пользовательских сценариев")
+    Rel(devices, db, "Read & write to", "Database")
+    Rel(scripts, db, "Read & write to", "Database")
+    Rel(devices, sensor, "JSON/HTTPS", "Rest API")
+}
+
+Rel(webapp, gateway, "Uses", "JSON/HTTPS")
+Rel(mobapp, gateway, "Uses", "JSON/HTTPS")
+Rel(gateway, devices, "Uses", "JSON/HTTPS")
+Rel(gateway, scripts, "Uses", "JSON/HTTPS")
+
+@enduml

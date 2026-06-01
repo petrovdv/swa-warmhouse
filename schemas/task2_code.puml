@@ -1,0 +1,43 @@
+@startuml
+title Devices Classes Diagram
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+class House {
+  +String name
+  +Number owner
+  +Date last_updated
+  +Date created_at
+  +void add_device()
+  +void get_devices()
+}
+
+class Device {
+  +String name
+  +Number type_id
+  +Number house_id
+  +Number serial_number
+  +String location
+  +String status
+  +Date last_updated
+  +Date created_at
+  +void apply_changes()
+  +void get_status()
+}
+
+class ControlSensor extends Device {
+  +void apply_changes()
+  +void get_status()
+}
+
+class TelemetrySensor extends Device {
+  +void get_telemetry()
+}
+
+
+House "1" -- "0..*" Device : has
+
+@enduml

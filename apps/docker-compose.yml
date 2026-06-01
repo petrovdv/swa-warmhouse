@@ -1,13 +1,88 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
     container_name: smarthome-postgres
-  ## тут нужно добавить настройки
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./smart_home/init.sql:/docker-entrypoint-initdb.d/init1.sql
+      - ./users_api/init.sql:/docker-entrypoint-initdb.d/init2.sql
+      - ./devices_api/init.sql:/docker-entrypoint-initdb.d/init3.sql
+      - ./telemetry_api/init.sql:/docker-entrypoint-initdb.d/init4.sql
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d smarthome" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - smarthome-network
 
   temperature-api:
-  ## тут нужно добавить приложение
+    build:
+      context: ./temperature_api
+      dockerfile: Dockerfile
+    container_name: temperature-api
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    networks:
+      - smarthome-network
+
+  users-api:
+    build:
+      context: ./users_api
+      dockerfile: Dockerfile
+    container_name: users-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/users
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
+    networks:
+      - smarthome-network
+
+  devices-api:
+    build:
+      context: ./devices_api
+      dockerfile: Dockerfile
+    container_name: devices-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/devices
+    ports:
+      - "8083:8083"
+    restart: unless-stopped
+    networks:
+      - smarthome-network
+
+  telemetry-api:
+    build:
+      context: ./telemetry_api
+      dockerfile: Dockerfile
+    container_name: telemetry-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temperature-api:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/telemetry
+      - TEMPERATURE_API_URL=http://temperature-api:8081
+    ports:
+      - "8084:8084"
+    restart: unless-stopped
+    networks:
+      - smarthome-network
 
   app:
     build:
@@ -19,9 +94,14 @@ services:
         condition: service_healthy
       temperature-api:
         condition: service_started
+      devices-api:
+        condition: service_started
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/smarthome
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/smarthome
       - TEMPERATURE_API_URL=http://temperature-api:8081
+      - USERS_API_URL=http://users-api:8082
+      - DEVICES_API_URL=http://devices-api:8083
+      - TELEMETRY_API_URL=http://telemetry-api:8084
     ports:
       - "8080:8080"
     restart: unless-stopped

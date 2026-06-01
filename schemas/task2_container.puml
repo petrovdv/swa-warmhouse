@@ -1,0 +1,58 @@
+@startuml
+title Smarthome Container Diagram
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь сервисов компании SmartHome")
+Person(admin, "Сотрудник SmartHome", "Сотрудник компании SmartHome, отвечающий за администрирование системы")
+Boundary(system, "SmartHome: управление умным домом") {
+    Container(webapp, "Web App", "Web-Портал")
+    Container(mobapp, "Mobile App", "Мобильное приложение")
+    Container(gateway, "API Gateway", "Маршрутизатор")
+    Container(sensors, "Sensors API", "Старое монолитное приложение")
+    Container(users, "Users API", "Сервис управления пользователями")
+    Container(devices, "Devices API", "Сервис управления устройствами")
+    Container(telemetry, "Telemetry API", "Сервис для работы с телеметрией")
+    Container(broker, "Telemetry Collector", "Брокер сбора телеметрии (Kafka)")
+    ContainerDb(old_db, "База данных монолита", "PostgreSQL")
+    ContainerDb(users_db, "Хранение информации о пользователях", "PostgreSQL")
+    ContainerDb(devices_db, "Хранение информации об устройствах", "PostgreSQL")
+    ContainerDb(telemetry_db, "Телеметрия с устройств", "PostgreSQL")
+}
+System_Ext(control_sensor, "Датчик управления", "Датчики управления устройствами (реле управления)")
+System_Ext(telemetry_sensor, "Датчик сбора телеметрии", "Датчики сбора телеметрии")
+
+Rel(user, webapp, "Взаимодействует с системой через web-портал")
+Rel(user, mobapp, "Взаимодействует с системой через мобильное приложение")
+Rel(admin, webapp, "Взаимодействует с системой через web-портал")
+Rel(admin, mobapp, "Взаимодействует с системой через мобильное приложение")
+
+Rel(webapp, gateway, "Взаимодействует через шлюз")
+Rel(mobapp, gateway, "Взаимодействует через шлюз")
+
+Rel(gateway, sensors, "АПИ монолита для датчиков")
+Rel(gateway, users, "Регистрация и аутентификация пользователей")
+Rel(gateway, devices, "Добавление устройств и настройка (включая сценарии)")
+Rel(gateway, telemetry, "Просмотр данных телеметрии с устройств")
+Rel(gateway, broker, "Перенаправляет асинхронные запросы с устройств на брокер")
+Rel(broker, telemetry, "Получает телеметрию с брокера через подписку на сообщения")
+
+Rel(sensors, old_db, "Хранит информацию о датчиках")
+Rel(users, users_db, "Хранит информацию о пользователях")
+Rel(devices, devices_db, "Хранит информацию о пользователях")
+Rel(telemetry, telemetry_db, "Хранит телеметрию")
+
+Rel(devices, control_sensor, "Управляет подключением датчиков")
+Rel(devices, telemetry_sensor, "Управляет подключением датчиков")
+
+Rel(telemetry, telemetry_sensor, "Забирает телеметрию с устройства")
+
+Rel(sensors, telemetry_sensor, "Получает температуру")
+Rel(sensors, control_sensor, "Включает/выключает отопление")
+Rel(telemetry_sensor, gateway, "Отправляет информацию датчиков асинхронно")
+
+
+@enduml
